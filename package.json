@@ -1,0 +1,54 @@
+{
+  "type": "module",
+  "name": "yrizzz.bot",
+  "version": "1.0.0",
+  "keywords": [
+    "BotWhatsapp",
+    "BotWa"
+  ],
+  "author": "Aris Edy Handoko",
+  "description": "",
+  "scripts": {
+    "start": "node ."
+  },
+  "dependencies": {
+    "@bochilteam/scraper": "^5.0.1",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "@google/generative-ai": "^0.17.0",
+    "@mengkodingan/ckptw": "^4.3.6",
+    "@types/yargs": "^17.0.33",
+    "@whiskeysockets/baileys": "^6.7.7",
+    "axios": "^1.7.4",
+    "canvas": "^3.1.0",
+    "cfonts": "^3.3.0",
+    "chalk": "^5.3.0",
+    "cheerio": "^1.0.0",
+    "child_process": "^1.0.2",
+    "dateformat": "^5.0.3",
+    "dotenv": "^16.4.5",
+    "ffmpeg": "^0.0.4",
+    "form-data": "^4.0.0",
+    "fs": "^0.0.1-security",
+    "jimp": "^0.16.13",
+    "link-preview-js": "^3.0.5",
+    "moment": "^2.30.1",
+    "node-fetch": "^3.3.2",
+    "path": "^0.12.7",
+    "pino": "^9.4.0",
+    "pino-pretty": "^11.2.2",
+    "prodia.js": "^3.0.0",
+    "prompt-list": "^3.2.0",
+    "prompts": "^2.4.2",
+    "punycode": "^2.3.1",
+    "qrcode-terminal": "^0.12.0",
+    "qs": "^6.13.0",
+    "save": "^2.9.0",
+    "sharp": "^0.32.6",
+    "simpl.db": "^2.13.0",
+    "useragent-generator": "^1.1.1-amkt-22079-finish.0",
+    "wa-sticker-formatter": "^4.4.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.3.0"
+  }
+}
