@@ -1,8 +1,10 @@
-import { Client } from "@mengkodingan/ckptw";
-import handler from "./handler/global.js";
-import event from "./handler/event.js";
+import { Client, CommandHandler } from '@mengkodingan/ckptw';
+import path from 'path';
+import handler from './handler/global.js';
+import event from './handler/event.js';
 import fs from 'fs';
 import List from 'prompt-list';
+
 
 function start() {
     const bot = new Client({
@@ -17,12 +19,14 @@ function start() {
         usePairingCode: handler.base.usePairingCode
     });
 
+    const cmd = new CommandHandler(bot, path.resolve() + '/commands');
+    cmd.load(false);
     event(bot);
     bot.launch();
 }
 
 export default function main() {
-    if (fs.existsSync("./state/creds.json")) {
+    if (fs.existsSync('./state/creds.json')) {
         start();
     } else {
         let promptList = new List({
@@ -44,7 +48,7 @@ export default function main() {
                 } else {
                     start();
                 }
-        });
+            });
     }
 
 }

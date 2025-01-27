@@ -2,12 +2,12 @@ import { monospace, italic, quote } from '@mengkodingan/ckptw';
 
 global.handler = {
     bot: {
+        prefix: '/[^.#!~]/i', 
         thumbnail: '',
         website: '',
         group: '',
     },
-    base: {
-        prefix: '/[^.#!~]/i', // Array<string> | string | RegExp;
+    base: {// Array<string> | string | RegExp;
         readIncommingMsg: '', // Should bot mark as read the incomming messages? - Default: false
         authDir: './config', // Path to the auth/creds directory - Default: ./state
         printQRInTerminal: true, //  Print the qr in terminal? - Default: false
