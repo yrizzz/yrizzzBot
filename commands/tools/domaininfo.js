@@ -10,7 +10,6 @@ export default {
         let data = m.content.replace(first, '');
         await ctx.react(ctx.id, '⏳')
         try {
-
             let dateDiff = (date) => {
 
                 date = date.split('-');
