@@ -65,7 +65,10 @@ export default {
                 }
                 await ctx.reply({ text: rplyMessage }, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
                 await ctx.react(ctx.id, '✅')
-            });
+            }).catch(async (err) => {
+                await ctx.react(ctx.id, '⛔')
+                await ctx.reply({ text: 'domain not found' }, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
+            })
 
         } catch (err) {
             await ctx.react(ctx.id, '⛔')

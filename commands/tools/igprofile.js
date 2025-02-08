@@ -24,6 +24,7 @@ export default {
 
             axios.request(config)
                 .then(async (response) => {
+                    if (response.status !== 200) return false;
                     let result = response.data;
                     await ctx.reply({ image: { url: result.picture_hd }, caption: `Followers : ${result.followers}\nFollowing : ${result.following}\nTotal post : ${result.post_count}` })
                     await ctx.react(ctx.id, '✅')

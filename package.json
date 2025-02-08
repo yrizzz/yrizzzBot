@@ -48,6 +48,7 @@
     "wa-sticker-formatter": "^1.6.0"
   },
   "devDependencies": {
-    "@types/node": "^22.3.0"
+    "@types/node": "^22.3.0",
+    "babel-plugin-add-module-exports": "^1.0.4"
   }
 }

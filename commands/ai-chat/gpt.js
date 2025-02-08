@@ -47,7 +47,6 @@ export default {
     
     
         } catch (err) {
-            console.log(err)
             await ctx.react(ctx.id, '⛔')
             await ctx.reply({ text: 'internal server error' }, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
         }

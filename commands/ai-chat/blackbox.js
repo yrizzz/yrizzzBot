@@ -4,6 +4,7 @@ import { downloadMediaMessage } from '@whiskeysockets/baileys'
 import { writeFile } from 'fs/promises'
 import FormData from 'form-data'
 import fs from 'fs'
+
 function randomString(length) {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -39,7 +40,7 @@ export default {
             let formdata = new FormData();
             formdata.append('fileName', caption);
             formdata.append('userId', 'f3d50a53-02a3-404d-9110-9049f0c40598');
-            formdata.append('image', fs.createReadStream('./' + caption));
+            formdata.append('document', new Blob([buffer]));
             await axios({
                 method: 'POST',
                 url: 'https://www.blackbox.ai/api/upload',
