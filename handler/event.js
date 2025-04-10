@@ -1,4 +1,4 @@
-import { quote, Events } from '@mengkodingan/ckptw';
+import { quote, Events,CommandHandler } from '@mengkodingan/ckptw';
 import moment from 'moment';
 import { createCanvas, loadImage } from 'canvas';
 
@@ -59,11 +59,10 @@ export default async function event(bot) {
         print(`connected at ${m.user.id}`);
     });
 
-    bot.ev.on(Events.MessagesUpsert, (m, ctx) => {
+    bot.ev.on(Events.MessagesUpsert, async (m, ctx) => {
         const messageType = ctx.getMessageType();
         const message = m.content;
         const sender = m.key.remoteJid;
-        if (m.key.fromMe) return;
         print(
             `[${chalk.green(
                 moment.unix(m.messageTimestamp).format('DD/MM/YYYY HH:mm:ss')

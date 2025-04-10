@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios';  
 export default {
     name: 'gpt',
     type: 'command',
@@ -28,7 +28,7 @@ export default {
                             "role": "user"
                         }
                     ],
-                    "prompt": 'nama mu adalah yrizzz, kamu adalah asisten kecerdasan buatan yang sering membantu orang lain jika ada yang ditanyakan',
+                    "prompt": 'nama mu adalah robot asisten, kamu adalah asisten kecerdasan buatan yang sering membantu orang lain jika ada yang ditanyakan',
                     "temperature": 0.5
                 },
                 headers: {

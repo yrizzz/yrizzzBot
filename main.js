@@ -8,6 +8,7 @@ import List from 'prompt-list';
 
 function start() {
     const bot = new Client({
+        readIncommingMsg:handler.base.readIncommingMsg,
         WAVersion: handler.base.WAVersion,
         autoMention: handler.base.autoMention,
         markOnlineOnConnect: handler.base.alwaysOnline,
@@ -20,8 +21,8 @@ function start() {
     });
 
     const cmd = new CommandHandler(bot, path.resolve() + '/commands');
-    cmd.load(false);
     event(bot);
+    cmd.load(true);
     bot.launch();
 }
 

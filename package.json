@@ -13,9 +13,8 @@
   },
   "dependencies": {
     "@bochilteam/scraper": "^5.0.1",
-    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@google/generative-ai": "^0.17.2",
-    "@mengkodingan/ckptw": "^4.4.0",
+    "@mengkodingan/ckptw": "^4.4.9",
     "@types/yargs": "^17.0.33",
     "@whiskeysockets/baileys": "^6.7.7",
     "axios": "^1.7.4",
