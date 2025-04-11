@@ -1,4 +1,3 @@
-import Database from 'simpl.db';
 import cfonts from 'cfonts';
 import chalk from 'chalk';
 import { createRequire } from "module";
@@ -9,26 +8,11 @@ const pkg = createRequire(import.meta.url)("./package.json");
 global.chalk = chalk;
 global.print = console.log;
 
-const setupDB = () => {
-    const db = new Database(
-        {
-            'config': {
-                'autoSave': true,
-                'collectionsFolder': './config/collection/',
-                'dataFile': './config/database.json'
-            }
-        }
-    );
-
-    db.createCollection('users');
-}
-
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const run = async () => {
 
     try {
-        setupDB();
         cfonts.say(pkg.name, {
             font: 'block',
             align: 'left',

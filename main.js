@@ -4,11 +4,15 @@ import handler from './handler/global.js';
 import event from './handler/event.js';
 import fs from 'fs';
 import List from 'prompt-list';
+import { DB } from './config/database.js';
+await DB.setUp();
 
 
-function start() {
+
+async function start() {
+    await DB.DropDB();
     const bot = new Client({
-        readIncommingMsg:handler.base.readIncommingMsg,
+        readIncommingMsg: handler.base.readIncommingMsg,
         WAVersion: handler.base.WAVersion,
         autoMention: handler.base.autoMention,
         markOnlineOnConnect: handler.base.alwaysOnline,
@@ -19,10 +23,15 @@ function start() {
         selfReply: handler.base.selfReply,
         usePairingCode: handler.base.usePairingCode
     });
+    const Setup = await DB.Setup();
+    await Setup.create({
+        selfmode: handler.bot.selfmode
+    });
 
-    const cmd = new CommandHandler(bot, path.resolve() + '/commands');
     event(bot);
-    cmd.load(true);
+    
+    const cmd = new CommandHandler(bot, path.resolve() + '/commands');
+    cmd.load(false);
     bot.launch();
 }
 

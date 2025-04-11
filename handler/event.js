@@ -1,6 +1,11 @@
-import { quote, Events,CommandHandler } from '@mengkodingan/ckptw';
+import { quote, Events, CommandHandler } from '@mengkodingan/ckptw';
 import moment from 'moment';
 import { createCanvas, loadImage } from 'canvas';
+import handler from './global.js';
+import { DB } from '../config/database.js';
+await DB.setUp();
+const Setup = await DB.Setup();
+const Owner = await DB.Owner();
 
 const groupUserEvent = async (bot, m) => {
     try {
@@ -54,20 +59,90 @@ const groupUserEvent = async (bot, m) => {
     }
 };
 
+const messagesHandler = async (ctx) => {
+    const m = ctx._msg;
+    const isGroup = ctx.isGroup();
+    const sender = isGroup ? m.key.participant : m.key.remoteJid;
+    const isOwner = m.key.fromMe;
+    const messageType = ctx.getMessageType();
+    const message = m.content;
+    const groupId = m.key.remoteJid;
+    const setupBot = await Setup.findOne();
+
+
+    print(
+        `[${chalk.green(
+            moment.unix(m.messageTimestamp).format('DD/MM/YYYY HH:mm:ss')
+        )}]\nFrom : ${sender}\nType : ${messageType}\nMessage : ${message}\n`
+    );
+
+    if (setupBot.selfmode === true){
+        return;
+    };
+
+    if (isOwner && message) {
+        let res;
+        try {
+            if (message.startsWith('>>')) {
+                const code = m.content.slice(message.startsWith('>> ') ? 3 : 2);
+                const key = code.split(' ')[0].toLowerCase();
+                const value = code.split(' ')[1].toLowerCase();
+                const schemaKeys = Object.keys(Setup.schema.paths);
+                if (!schemaKeys.includes(key)) {
+                    ctx.reply(`Invalid key: ${key}\n *List available* : ${JSON.stringify(schemaKeys, null, 2)}`, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
+                    return;
+                }
+                const updateData = { [key]: value };
+                const res = await Setup.findOneAndUpdate({}, updateData);
+                ctx.reply(`*✅ Executed : ${key} to ${value}*`, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
+            }
+
+            if (message.startsWith('=>')) {
+                let Models;
+                const code = m.content.slice(message.startsWith('=> ') ? 3 : 2);
+                const split = code.split(' ');
+                const model = String(split[0].toLowerCase().charAt(0).toUpperCase()) + String(split[0]).slice(1);
+                const command = split[1]?.toLowerCase() ?? '';
+                const value = split[2]?.toLowerCase() ?? '';
+
+                switch (command) {
+                    case 'update':
+                        Models = await eval(`DB.${model}()`)
+                        res = await Models.findOneAndUpdate({}, JSON.parse(value))
+                        break;
+                    case 'show':
+                        Models = await eval(`DB.${model}()`)
+                        res = await Models.find()
+                        break;
+
+                }
+                ctx.reply(JSON.stringify(res, null, 2), { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
+            }
+        } catch (err) {
+            console.log(err)
+            ctx.reply('invalid command,please check your command', { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 })
+        }
+
+
+    }
+
+}
+
 export default async function event(bot) {
-    bot.ev.once(Events.ClientReady, (m) => {
+    bot.ev.once(Events.ClientReady, async (m) => {
         print(`connected at ${m.user.id}`);
+        await Owner.create({ 'id': m.user.id, 'name': m.user.name })
     });
 
+
+
     bot.ev.on(Events.MessagesUpsert, async (m, ctx) => {
-        const messageType = ctx.getMessageType();
-        const message = m.content;
-        const sender = m.key.remoteJid;
-        print(
-            `[${chalk.green(
-                moment.unix(m.messageTimestamp).format('DD/MM/YYYY HH:mm:ss')
-            )}]\nFrom : ${sender}\nType : ${messageType}\nMessage : ${message}\n`
-        );
+        messagesHandler(ctx, m)
+    });
+
+    bot.use(async (ctx, next) => {
+        messagesHandler(ctx)
+        await next();
     });
 
     bot.ev.on(Events.UserJoin, async (m) => groupUserEvent(bot, m));
