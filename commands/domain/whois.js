@@ -1,39 +1,24 @@
 import req from '../../handler/req.js'
+import helper from '../../handler/helper.js'
 
 export default {
     name: 'whois',
     type: 'command',
     code: async (ctx) => {
         let m = ctx._msg;
-        let first = m.content.split(' ')[0];
-        let data = m.content.replace(first, '');
+        let command = m.content.split(' ')[0];
+        let data = m.content.slice(command.length+1);
         await ctx.react(ctx.id, '⏳')
         try {
-
             const regex = /(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}(\.?[a-zA-Z0-9\_\-]{1,})(\.[a-zA-Z0-9]{2,})/g;
 
-            let link;
-            if (m?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.conversation) {
-                link = m?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.conversation;
-            } else if (m?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.extendedTextMessage?.text) {
-                link = m?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.extendedTextMessage?.text
-            } else if (m?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.imageMessage?.caption) {
-                link = m?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.imageMessage?.caption;
-            } else if (m?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.videoMessage?.caption) {
-                link = m?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.videoMessage?.caption;
-            } else {
-                link = data;
-            }
+            data = helper.filtermessage(m, data);
 
-            link = link.replace('.whois ', '');
-
-            link = link.match(regex)[0];
+            let link = data.match(regex)[0];
             link = link.replace('https://', '').replace('http://', '').replace('www.', '')
             const result = await req('GET', `https://yrizzz.my.id/api/v1/domain/whois?domain=${link}`)
             if (result.status) {
-                let rplyMessage = '🌐 Whois : ' + data + '\n';
-                console.log(result.data)
-
+                let rplyMessage = '🌐 Whois : ' + link + '\n';
                 for (let res in result.data) {
                     rplyMessage += '\n'
                     rplyMessage += '🔰 ' + res + '\n'

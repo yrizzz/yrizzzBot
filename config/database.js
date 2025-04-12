@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 class DB {
     static database;
 
-    static async setUp() {
+    static async start() {
         if (!this.database) {
             this.database = mongoose.connect('mongodb+srv://rekberariez:8jut0JfILYhpNtjd@wabot.yi0dtso.mongodb.net/waBot?appName=waBot')
                 .then(() => {

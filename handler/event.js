@@ -1,9 +1,8 @@
-import { quote, Events, CommandHandler } from '@mengkodingan/ckptw';
-import moment from 'moment';
+import { Events, quote } from '@mengkodingan/ckptw';
 import { createCanvas, loadImage } from 'canvas';
-import handler from './global.js';
+import moment from 'moment';
 import { DB } from '../config/database.js';
-await DB.setUp();
+await DB.start();
 const Setup = await DB.Setup();
 const Owner = await DB.Owner();
 
@@ -50,11 +49,11 @@ const groupUserEvent = async (bot, m) => {
             ctx.drawImage(image, 15, 15, 70, 70);
         });
 
-        bot.core.sendMessage(id, { image: canvas.toBuffer('image/png', { compressionLevel: 3, filters: canvas.PNG_FILTER_NONE }), caption: capt, mentions: [jid], ephemeralExpiration: groupMetadata.ephemeralDuration ?? 0 });
+        bot.core.sendMessage(id, { image: canvas.toBuffer('image/png', { compressionLevel: 3, filters: canvas.PNG_FILTER_NONE }), caption: capt, mentions: [jid]},{ ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
     } catch (e) {
         console.error(`[${config.pkg.name}] Error:`, error);
         await bot.core.sendMessage(id, {
-            text: quote(`⚠️ Terjadi kesalahan: ${error.message}`),
+            text: quote(`⚠️ Terjadi kesalahan: ${error.message}`,{ ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 }),
         });
     }
 };
@@ -76,9 +75,8 @@ const messagesHandler = async (ctx) => {
         )}]\nFrom : ${sender}\nType : ${messageType}\nMessage : ${message}\n`
     );
 
-    if (setupBot.selfmode === true){
-        return;
-    };
+    if (await setupBot.selfmode === true && !isOwner) return false;
+
 
     if (isOwner && message) {
         let res;
@@ -128,23 +126,19 @@ const messagesHandler = async (ctx) => {
 
 }
 
-export default async function event(bot) {
+const event = async (bot) => {
     bot.ev.once(Events.ClientReady, async (m) => {
         print(`connected at ${m.user.id}`);
         await Owner.create({ 'id': m.user.id, 'name': m.user.name })
     });
 
-
-
     bot.ev.on(Events.MessagesUpsert, async (m, ctx) => {
         messagesHandler(ctx, m)
-    });
-
-    bot.use(async (ctx, next) => {
-        messagesHandler(ctx)
-        await next();
     });
 
     bot.ev.on(Events.UserJoin, async (m) => groupUserEvent(bot, m));
     bot.ev.on(Events.UserLeave, async (m) => groupUserEvent(bot, m));
 }
+
+export { event, messagesHandler };
+

@@ -1,11 +1,11 @@
 import { Client, CommandHandler } from '@mengkodingan/ckptw';
 import path from 'path';
-import handler from './handler/global.js';
-import event from './handler/event.js';
+import handler from './handler/setup.js';
+import { event, messagesHandler } from './handler/event.js';
 import fs from 'fs';
 import List from 'prompt-list';
 import { DB } from './config/database.js';
-await DB.setUp();
+await DB.start();
 
 
 
@@ -28,8 +28,15 @@ async function start() {
         selfmode: handler.bot.selfmode
     });
 
-    event(bot);
-    
+    await event(bot);
+
+    //middleware
+    bot.use(async (ctx, next) => {
+        const result = await messagesHandler(ctx);
+        if (result === false) return;
+        await next();
+    });
+
     const cmd = new CommandHandler(bot, path.resolve() + '/commands');
     cmd.load(false);
     bot.launch();

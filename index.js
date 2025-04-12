@@ -3,7 +3,6 @@ import chalk from 'chalk';
 import { createRequire } from "module";
 import main from './main.js';
 
-
 const pkg = createRequire(import.meta.url)("./package.json");
 global.chalk = chalk;
 global.print = console.log;
