@@ -1,5 +1,6 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+
 class DB {
     static database;
 
@@ -7,7 +8,7 @@ class DB {
         if (!this.database) {
             this.database = mongoose.connect('mongodb+srv://rekberariez:8jut0JfILYhpNtjd@wabot.yi0dtso.mongodb.net/waBot?appName=waBot')
                 .then(() => {
-                    console.log('Connected with Database')
+                    console.log('Connected with Database');
                 }).catch((err) => {
                     console.log(err);
                 });
@@ -24,7 +25,7 @@ class DB {
             },
             name: {
                 type: String,
-                required: true
+                required: false
             }
         }, { timestamps: true });
 
@@ -72,4 +73,4 @@ class DB {
     }
 }
 
-export { DB };
+module.exports = { DB };

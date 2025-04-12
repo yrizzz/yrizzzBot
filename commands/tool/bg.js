@@ -1,7 +1,10 @@
-import { MessageType } from "@mengkodingan/ckptw";
-import req from '../../handler/req.js';
-import sharp from 'sharp';
-export default {
+const { MessageType } = require("@mengkodingan/ckptw");
+const req = require('../../handler/req.js');
+const sharp = require('sharp');
+const FormData = require('form-data');
+const Blob = require('buffer').Blob;
+
+module.exports = {
     name: 'bg',
     type: 'command',
     code: async (ctx) => {
@@ -45,7 +48,4 @@ export default {
             await ctx.reply({ text: 'internal server error' }, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
         }
     }
-
-
 }
-

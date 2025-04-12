@@ -1,32 +1,38 @@
-import { Events, quote } from '@mengkodingan/ckptw';
-import { createCanvas, loadImage } from 'canvas';
-import moment from 'moment';
-import { DB } from '../config/database.js';
-await DB.start();
-const Setup = await DB.Setup();
-const Owner = await DB.Owner();
+const { Events,quote } = require('@mengkodingan/ckptw');
+const { createCanvas,loadImage } = require('canvas');
+const moment = require('moment');
+const { DB } = require('../config/database.js');
 
-const groupUserEvent = async (bot, m) => {
+
+let Setup, Owner;
+
+(async () => {
+    await DB.start();
+    Setup = await DB.Setup();
+    Owner = await DB.Owner();
+})();
+
+const groupUserEvent = async (bot,m) => {
     try {
-        const { id, author, participants, action } = m;
+        const { id,author,participants,action } = m;
         const jid = participants[0];
         const groupMetadata = await bot.core.groupMetadata(id);
         const profilePictureUrl = await bot.core
-            .profilePictureUrl(jid, 'image')
+            .profilePictureUrl(jid,'image')
             .catch(
                 () =>
                     'https://i.pinimg.com/736x/70/dd/61/70dd612c65034b88ebf474a52ccc70c4.jpg'
             );
-        print(groupMetadata, profilePictureUrl);
-        const canvas = createCanvas(300, 100);
+        print(groupMetadata,profilePictureUrl);
+        const canvas = createCanvas(300,100);
         const ctx = canvas.getContext('2d');
         ctx.fillStyle = 'white';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillRect(0,0,canvas.width,canvas.height);
 
-        let greeting, capt;
+        let greeting,capt;
         if (action == 'add') {
             greeting = 'Selamat datang 👋';
-            capt = quote('Peraturan grup:\n' + groupMetadata.desc)
+            capt = quote('Peraturan grup:\n' + groupMetadata.desc);
         } else {
             greeting = 'Sampai jumpa 👋';
             capt = '';
@@ -36,29 +42,39 @@ const groupUserEvent = async (bot, m) => {
         var welcomeMessage = greeting;
         ctx.textAlign = 'start';
         ctx.fillStyle = 'black';
-        ctx.fillText(welcomeMessage, 100, 30);
+        ctx.fillText(welcomeMessage,100,30);
         ctx.font = '13px verdana, sans-serif ';
         ctx.textAlign = 'start';
         ctx.fillStyle = 'black';
-        ctx.fillText('@' + groupMetadata.subject, 100, 50);
+        ctx.fillText('@' + groupMetadata.subject,100,50);
         ctx.textAlign = 'start';
         ctx.fillStyle = 'black';
-        ctx.fillText(jid.split('@')[0], 100, 70);
+        ctx.fillText(jid.split('@')[0],100,70);
 
         await loadImage(profilePictureUrl).then((image) => {
-            ctx.drawImage(image, 15, 15, 70, 70);
+            ctx.drawImage(image,15,15,70,70);
         });
 
-        bot.core.sendMessage(id, { image: canvas.toBuffer('image/png', { compressionLevel: 3, filters: canvas.PNG_FILTER_NONE }), caption: capt, mentions: [jid]},{ ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
+        bot.core.sendMessage(
+            id,
+            {
+                image: canvas.toBuffer('image/png',{ compressionLevel: 3,filters: canvas.PNG_FILTER_NONE }),
+                caption: capt,
+                mentions: [jid]
+            },
+            { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 }
+        );
     } catch (e) {
-        console.error(`[${config.pkg.name}] Error:`, error);
-        await bot.core.sendMessage(id, {
+        console.error(`[${config.pkg.name}] Error:`,error);
+        await bot.core.sendMessage(id,{
             text: quote(`⚠️ Terjadi kesalahan: ${error.message}`,{ ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 }),
         });
     }
 };
 
 const messagesHandler = async (ctx) => {
+
+
     const m = ctx._msg;
     const isGroup = ctx.isGroup();
     const sender = isGroup ? m.key.participant : m.key.remoteJid;
@@ -68,7 +84,6 @@ const messagesHandler = async (ctx) => {
     const groupId = m.key.remoteJid;
     const setupBot = await Setup.findOne();
 
-
     print(
         `[${chalk.green(
             moment.unix(m.messageTimestamp).format('DD/MM/YYYY HH:mm:ss')
@@ -76,7 +91,6 @@ const messagesHandler = async (ctx) => {
     );
 
     if (await setupBot.selfmode === true && !isOwner) return false;
-
 
     if (isOwner && message) {
         let res;
@@ -87,12 +101,12 @@ const messagesHandler = async (ctx) => {
                 const value = code.split(' ')[1].toLowerCase();
                 const schemaKeys = Object.keys(Setup.schema.paths);
                 if (!schemaKeys.includes(key)) {
-                    ctx.reply(`Invalid key: ${key}\n *List available* : ${JSON.stringify(schemaKeys, null, 2)}`, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
+                    ctx.reply(`Invalid key: ${key}\n *List available* : ${JSON.stringify(schemaKeys,null,2)}`,{ ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
                     return;
                 }
                 const updateData = { [key]: value };
-                const res = await Setup.findOneAndUpdate({}, updateData);
-                ctx.reply(`*✅ Executed : ${key} to ${value}*`, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
+                const res = await Setup.findOneAndUpdate({},updateData);
+                ctx.reply(`*✅ Executed : ${key} to ${value}*`,{ ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
             }
 
             if (message.startsWith('=>')) {
@@ -105,40 +119,35 @@ const messagesHandler = async (ctx) => {
 
                 switch (command) {
                     case 'update':
-                        Models = await eval(`DB.${model}()`)
-                        res = await Models.findOneAndUpdate({}, JSON.parse(value))
+                        Models = await eval(`DB.${model}()`);
+                        res = await Models.findOneAndUpdate({},JSON.parse(value));
                         break;
                     case 'show':
-                        Models = await eval(`DB.${model}()`)
-                        res = await Models.find()
+                        Models = await eval(`DB.${model}()`);
+                        res = await Models.find();
                         break;
-
                 }
-                ctx.reply(JSON.stringify(res, null, 2), { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
+                ctx.reply(JSON.stringify(res,null,2),{ ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
             }
         } catch (err) {
-            console.log(err)
-            ctx.reply('invalid command,please check your command', { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 })
+            console.log(err);
+            ctx.reply('invalid command,please check your command',{ ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
         }
-
-
     }
-
-}
+};
 
 const event = async (bot) => {
-    bot.ev.once(Events.ClientReady, async (m) => {
+    bot.ev.once(Events.ClientReady,async (m) => {
         print(`connected at ${m.user.id}`);
-        await Owner.create({ 'id': m.user.id, 'name': m.user.name })
+        await Owner.create({ 'id': m.user.id,'name': m.user.name });
     });
 
-    bot.ev.on(Events.MessagesUpsert, async (m, ctx) => {
-        messagesHandler(ctx, m)
+    bot.ev.on(Events.MessagesUpsert,async (m,ctx) => {
+        messagesHandler(ctx,m);
     });
 
-    bot.ev.on(Events.UserJoin, async (m) => groupUserEvent(bot, m));
-    bot.ev.on(Events.UserLeave, async (m) => groupUserEvent(bot, m));
-}
+    bot.ev.on(Events.UserJoin,async (m) => groupUserEvent(bot,m));
+    bot.ev.on(Events.UserLeave,async (m) => groupUserEvent(bot,m));
+};
 
-export { event, messagesHandler };
-
+module.exports = { event,messagesHandler };

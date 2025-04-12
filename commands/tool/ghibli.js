@@ -1,10 +1,10 @@
 const { MessageType } = require("@mengkodingan/ckptw");
 const req = require('../../handler/req.js');
 const FormData = require('form-data');
-const Blob = require('buffer').Blob;
+const Blob = require('node-blob');
 
 module.exports = {
-    name: 'hd',
+    name: 'ghibli',
     type: 'command',
     code: async (ctx) => {
         let m = ctx._msg;
@@ -27,13 +27,14 @@ module.exports = {
             }
 
             let formdata = new FormData();
-            formdata.append('image', new Blob([buffer])); // this image from wa as buffer
+            formdata.append('file', new Blob([buffer])); // this image from wa as buffer
 
-            const result = await req('POST', `https://yrizzz.my.id/api/v1/tool/imageHd`, formdata);
+            const ghibli = await req('POST', `https://api.headshotly.ai/api/engine/free-transform-ghibli`, formdata, {
+                'Origin': 'https://headshotly.ai',
+                'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36'
+            });
 
-            buffer = Buffer.from(result.data, 'base64');
-
-            await ctx.reply({ image: buffer, caption: 'Success ✅' }, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
+            await ctx.reply({ image: { url: ghibli.generatedImages[0].url }, caption: 'Success ✅' }, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
             await ctx.react(ctx.id, '✅');
 
         } catch (err) {

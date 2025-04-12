@@ -1,13 +1,14 @@
-import { Client, CommandHandler } from '@mengkodingan/ckptw';
-import path from 'path';
-import handler from './handler/setup.js';
-import { event, messagesHandler } from './handler/event.js';
-import fs from 'fs';
-import List from 'prompt-list';
-import { DB } from './config/database.js';
-await DB.start();
+const { Client, CommandHandler } = require('@mengkodingan/ckptw');
+const path = require('path');
+const handler = require('./handler/setup.js');
+const { event, messagesHandler } = require('./handler/event.js');
+const fs = require('fs');
+const List = require('prompt-list');
+const { DB } = require('./config/database.js');
 
-
+(async () => {
+    await DB.start();
+})();
 
 async function start() {
     await DB.DropDB();
@@ -42,7 +43,7 @@ async function start() {
     bot.launch();
 }
 
-export default function main() {
+function main() {
     if (fs.existsSync('./state/creds.json')) {
         start();
     } else {
@@ -53,12 +54,12 @@ export default function main() {
                 'QR Code',
                 'Pairing Code'
             ]
-        })
+        });
         promptList.run()
             .then(async (answer) => {
                 if (answer.match('Pairing Code')) {
                     if (!handler.base.phoneNumber) {
-                        print('you must add ' + chalk.red('phoneNumber & set usePairingCode to true') + ' at ./handler/global.js');
+                        console.log('you must add ' + chalk.red('phoneNumber & set usePairingCode to true') + ' at ./handler/global.js');
                         return;
                     }
                     start();
@@ -67,5 +68,6 @@ export default function main() {
                 }
             });
     }
-
 }
+
+module.exports = main;
