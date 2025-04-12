@@ -1,5 +1,6 @@
 const { Client, CommandHandler } = require('@mengkodingan/ckptw');
 const path = require('path');
+const kleur = require('kleur');
 const handler = require('./handler/setup.js');
 const { event, messagesHandler } = require('./handler/event.js');
 const fs = require('fs');
@@ -59,7 +60,7 @@ function main() {
             .then(async (answer) => {
                 if (answer.match('Pairing Code')) {
                     if (!handler.base.phoneNumber) {
-                        console.log('you must add ' + chalk.red('phoneNumber & set usePairingCode to true') + ' at ./handler/global.js');
+                        console.log('you must add ' + kleur.red('phoneNumber & set usePairingCode to true') + ' at ./handler/global.js');
                         return;
                     }
                     start();

@@ -44,7 +44,6 @@
     "qs": "^6.13.0",
     "save": "^2.9.0",
     "sharp": "^0.32.6",
-    "simpl.db": "^2.13.0",
     "useragent-generator": "^1.1.1-amkt-22079-finish.0",
     "wa-sticker-formatter": "^1.6.0"
   },

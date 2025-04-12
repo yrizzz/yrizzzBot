@@ -1,5 +1,6 @@
 const { Events,quote } = require('@mengkodingan/ckptw');
 const { createCanvas,loadImage } = require('canvas');
+const kleur = require('kleur');
 const moment = require('moment');
 const { DB } = require('../config/database.js');
 
@@ -85,7 +86,7 @@ const messagesHandler = async (ctx) => {
     const setupBot = await Setup.findOne();
 
     print(
-        `[${chalk.green(
+        `[${kleur.green(
             moment.unix(m.messageTimestamp).format('DD/MM/YYYY HH:mm:ss')
         )}]\nFrom : ${sender}\nType : ${messageType}\nMessage : ${message}\n`
     );

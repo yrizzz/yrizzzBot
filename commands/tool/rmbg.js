@@ -27,7 +27,8 @@ module.exports = {
             }
 
             let formdata = new FormData();
-            formdata.append('image', new Blob([buffer])); // this image from wa as buffer
+            formdata.append('file', buffer, { filename: 'image.jpg' }); // Use buffer directly with a filename
+
 
             const result = await req('POST', `https://yrizzz.my.id/api/v1/tool/removeBg`, formdata);
 
