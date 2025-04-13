@@ -12,6 +12,7 @@ module.exports = {
 		await ctx.react(ctx.id,'⏳');
 		try {
 			let buffer;
+			data = helper.filtermessage(m, data);
 			
 			try {
 				if (ctx.getMessageType() === MessageType.extendedTextMessage) {
@@ -25,7 +26,6 @@ module.exports = {
 				await ctx.reply({ text: 'image not found' },{ ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
 				await ctx.react(ctx.id,'⛔');
 			}
-			data = helper.filtermessage(m, data);
 
 			let formdata = new FormData();
 			formdata.append('image',buffer,{ filename: 'image.jpg' }); 
@@ -39,6 +39,7 @@ module.exports = {
 			}
 
 		} catch (err) {
+			console.log(err)
 			await ctx.react(ctx.id,'⛔');
 			await ctx.reply({ text: 'internal server error' },{ ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
 		}
