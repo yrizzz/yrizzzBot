@@ -15,10 +15,10 @@ module.exports = {
 
 			if (result.status) {
 				let link;
-				if (result?.xdt_shortcode_media?.video_url) {
-					link = result?.xdt_shortcode_media?.video_url
+				if (result.data?.xdt_shortcode_media?.video_url) {
+					link = result.data?.xdt_shortcode_media?.video_url
 				} else {
-					link = result?.xdt_shortcode_media?.display_url
+					link = result.data?.xdt_shortcode_media?.display_url
 				}
 				await ctx.reply({ video: { url: link },caption: '✅ Success' },{ ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
 				await ctx.react(ctx.id,'✅');
