@@ -12,8 +12,6 @@ module.exports = {
 		await ctx.react(ctx.id,'⏳');
 		try {
 			let buffer;
-			data = helper.filtermessage(m, data);
-			
 			try {
 				if (ctx.getMessageType() === MessageType.extendedTextMessage) {
 					buffer = await ctx.quoted.media.toBuffer();
@@ -27,14 +25,17 @@ module.exports = {
 				await ctx.react(ctx.id,'⛔');
 			}
 
+
+			console.log(data)
+
 			let formdata = new FormData();
-			formdata.append('image',buffer,{ filename: 'image.jpg' }); 
+			formdata.append('image',new Blob([buffer])); 
 			formdata.append('prompt',data);
 
 
 			const result = await req('POST',`https://yrizzz.my.id/api/v1/ai/blackboxImageText`,formdata);
 			if (result.status) {
-				await ctx.reply({ text: result.data },{ ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
+				await ctx.reply({ text: result.data.replaceAll('**','*') },{ ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
 				await ctx.react(ctx.id,'✅');
 			}
 
@@ -44,4 +45,4 @@ module.exports = {
 			await ctx.reply({ text: 'internal server error' },{ ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
 		}
 	}
-};
+};																						
