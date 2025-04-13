@@ -35,10 +35,9 @@ module.exports = {
                 'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36'
             });
 
-            console.log(ghibli)
 
-            //await ctx.reply({ image: { url: await ghibli.generatedImages[0].url }, caption: 'Success ✅' }, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
-            //await ctx.react(ctx.id, '✅');
+            await ctx.reply({ image: { url: await ghibli.generatedImages[0].url }, caption: 'Success ✅' }, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
+            await ctx.react(ctx.id, '✅');
 
         } catch (err) {
             console.log(err);
