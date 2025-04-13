@@ -147,8 +147,8 @@ const event = async (bot) => {
         messagesHandler(ctx,m);
     });
 
-    //bot.ev.on(Events.UserJoin,async (m) => groupUserEvent(bot,m));
-    //bot.ev.on(Events.UserLeave,async (m) => groupUserEvent(bot,m));
+    bot.ev.on(Events.UserJoin,async (m) => groupUserEvent(bot,m));
+    bot.ev.on(Events.UserLeave,async (m) => groupUserEvent(bot,m));
 };
 
 module.exports = { event,messagesHandler };
