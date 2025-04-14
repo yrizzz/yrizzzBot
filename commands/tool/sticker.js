@@ -1,8 +1,8 @@
 const { MessageType } = require("@mengkodingan/ckptw");
-const req = require('../../handler/req.js');
-const FormData = require('form-data');
+const { Sticker, createSticker, StickerTypes } = require('wa-sticker-formatter')
+
 module.exports = {
-    name: 'hd',
+    name: 'sticker',
     type: 'command',
     code: async (ctx) => {
         let m = ctx._msg;
@@ -10,29 +10,31 @@ module.exports = {
         let data = m.content.slice(command.length + 1);
         await ctx.react(ctx.id, '⏳');
         try {
-            let buffer;
+            let image;
             try {
                 if (ctx.getMessageType() === MessageType.extendedTextMessage) {
-                    buffer = await ctx.quoted.media.toBuffer();
+                    image = await ctx.quoted.media
                 } else if (ctx.getMessageType() === MessageType.imageMessage) {
-                    buffer = await ctx.msg.media.toBuffer();
+                    image = await ctx.msg.media
                 } else {
                     return false;
                 }
             } catch (err) {
-                await ctx.reply({ text: 'image not found' }, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
+                await ctx.reply({ text: 'media not found' }, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
                 await ctx.react(ctx.id, '⛔');
             }
 
-            let formdata = new FormData();
-            formdata.append('image', buffer, { filename: 'image.jpg' }); // Use buffer directly with a filename
+            const buffer = await new Sticker(image)
+                .setPack('My Sticker')
+                .setAuthor('Yrizzz')
+                .setType(StickerTypes.DEFAULT)
+                .setCategories(['🤩', '🎉'])
+                .setId('12345')
+                .setBackground('#000000')
+                .setQuality(100)
+                .toBuffer()
 
-
-            const result = await req('POST', `https://yrizzz.my.id/api/v1/tool/imageHd`, formdata);
-            console.log(result);
-            buffer = Buffer.from(result.data, 'base64');
-
-            await ctx.reply({ image: buffer, caption: 'Success ✅' }, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
+            await ctx.reply({ sticker: buffer }, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
             await ctx.react(ctx.id, '✅');
 
         } catch (err) {
