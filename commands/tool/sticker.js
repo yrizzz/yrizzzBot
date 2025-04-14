@@ -4,7 +4,7 @@ const fs = require('fs')
 module.exports = {
     name: 'sticker',
     aliases: ["sticker","s"],
-    command: 'hears',
+    command: 'command',
     code: async (ctx) => {
         let m = ctx._msg;
         let command = m.content.split(' ')[0];
