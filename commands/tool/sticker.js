@@ -2,7 +2,7 @@ const { MessageType } = require("@mengkodingan/ckptw");
 const { Sticker, createSticker, StickerTypes } = require('wa-sticker-formatter')
 
 module.exports = {
-    name: 'sticker',
+    name: ['sticker','s'],
     type: 'command',
     code: async (ctx) => {
         let m = ctx._msg;
