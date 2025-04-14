@@ -45,7 +45,7 @@
     "save": "^2.9.0",
     "sharp": "^0.32.6",
     "useragent-generator": "^1.1.1-amkt-22079-finish.0",
-    "wa-sticker-formatter": "^1.6.0"
+    "wa-sticker-formatter": "^4.4.4"
   },
   "devDependencies": {
     "@types/node": "^22.3.0",
