@@ -1,5 +1,5 @@
 node_modules
-
+state
 # Playwright
 /test-results/
 /playwright-report/
