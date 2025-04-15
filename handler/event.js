@@ -173,9 +173,9 @@ const event = async (bot) => {
             if (await ctx.isGroup) {
                 const members = await ctx?.group()?.members() ?? null;
                 const ids = members.map(member => member.id);
-                await ctx.sendMessage(remoteJid,{ text: rply },{ quoted: msg,ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0,mentions: ids.length > 0 ? ids : [] });
+                await ctx.sendMessage(ctx.id,{ text: rply },{ quoted: msg,ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0,mentions: ids.length > 0 ? ids : [] });
             } else {
-                await ctx.sendMessage(remoteJid,{ text: rply },{ quoted: msg,ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
+                await ctx.sendMessage(ctx.id,{ text: rply },{ quoted: msg,ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
             }
         }
 
