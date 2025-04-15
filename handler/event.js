@@ -1,3 +1,6 @@
+import pkg from "@whiskeysockets/baileys";
+const { generateWAMessageFromContent } = pkg
+
 const { Events,quote } = require('@mengkodingan/ckptw');
 const { createCanvas,loadImage } = require('canvas');
 const kleur = require('kleur');
@@ -150,11 +153,43 @@ const event = async (bot) => {
 
     bot.command('mention',async (ctx) => {
         const m = ctx._msg;
+        if (m.key.fromMe == true) {
+            let target,caption,rply;
+
+            if ((/|/).test(data)) {
+                target = data.split('|')[0];
+                caption = data.split('|')[1];
+                rply = data.split('|')[2];
+            }
+            ctx.deleteMessage(m.key);
+            let msg = generateWAMessageFromContent(target + '@s.whatsapp.net',{
+                extendedTextMessage: {
+                    text: caption
+                }
+            },{})
+
+            msg = JSON.stringify(msg).replace('"fromMe":true','"fromMe":false');
+            msg = JSON.parse(msg);
+            if (participant) {
+                let mentions = []
+                const members = await ctx?.group()?.members() ?? null;
+                for (let key in members) {
+                    mentions.push(members.id)
+                }
+                await ctx.sendMessage(remoteJid,{ text: rply },{ quoted: msg,ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0,mentions: mentions.length > 0 ? mentions : [] });
+            } else {
+                await ctx.sendMessage(remoteJid,{ text: rply },{ quoted: msg,ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
+            }
+        }
+
+    });
+
+    bot.command('iseng',async (ctx) => {
+        const m = ctx._msg;
         const members = await ctx.group().members()
         const ids = members.map(member => member.id);
 
-        ctx.reply({ text: m.content.slice(9) ,mentions: ids },{ ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 })
-
+        ctx.reply({ text: m.content.slice(9),mentions: ids },{ ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 })
     });
 
     bot.ev.on(Events.UserJoin,async (m) => groupUserEvent(bot,m));
