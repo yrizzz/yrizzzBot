@@ -149,8 +149,9 @@ const event = async (bot) => {
     });
 
     bot.command('mention',async (ctx) => {
-        const mentioned = ctx.getMentioned();
-        ctx.reply({ text: 'mention',mentions: mentioned })
+
+        console.log(mentioned)
+        ctx.reply({ text: 'mention',mentions: ctx.group().members() })
 
     });
 
