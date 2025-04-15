@@ -170,7 +170,7 @@ const event = async (bot) => {
 
             msg = JSON.stringify(msg).replace('"fromMe":true','"fromMe":false');
             msg = JSON.parse(msg);
-            if (participant) {
+            if (await ctx.isGroup) {
                 const members = await ctx?.group()?.members() ?? null;
                 const ids = members.map(member => member.id);
                 await ctx.sendMessage(remoteJid,{ text: rply },{ quoted: msg,ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0,mentions: ids.length > 0 ? ids : [] });
