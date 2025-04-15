@@ -84,7 +84,6 @@ const messagesHandler = async (ctx) => {
     const message = m.content;
     const groupId = m.key.remoteJid;
     const setupBot = await Setup.findOne();
-    const mentioned = ctx.getMentioned();
 
     print(
         `[${kleur.green(
@@ -93,7 +92,6 @@ const messagesHandler = async (ctx) => {
     );
 
 
-    bot.command('mention',async (ctx) => ctx.reply({ text: 'mention',mentions: mentioned }));
     if (await setupBot.selfmode === true && !isOwner) return false;
 
     if (isOwner && message) {
@@ -148,6 +146,12 @@ const event = async (bot) => {
 
     bot.ev.on(Events.MessagesUpsert,async (m,ctx) => {
         messagesHandler(ctx,m);
+    });
+
+    bot.command('mention',async (ctx) => {
+        const mentioned = ctx.getMentioned();
+        ctx.reply({ text: 'mention',mentions: mentioned })
+
     });
 
     bot.ev.on(Events.UserJoin,async (m) => groupUserEvent(bot,m));
