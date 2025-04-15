@@ -149,9 +149,7 @@ const event = async (bot) => {
     });
 
     bot.command('mention',async (ctx) => {
-
-        console.log(mentioned)
-        ctx.reply({ text: 'mention',mentions: ctx.group().members() })
+        ctx.reply({ text: 'mention',mentions: ctx.group().members() },{ ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 })
 
     });
 
