@@ -1,6 +1,5 @@
-import pkg from "@whiskeysockets/baileys";
+const pkg = require("@whiskeysockets/baileys");
 const { generateWAMessageFromContent } = pkg
-
 const { Events,quote } = require('@mengkodingan/ckptw');
 const { createCanvas,loadImage } = require('canvas');
 const kleur = require('kleur');
