@@ -152,6 +152,7 @@ const event = async (bot) => {
 
     bot.command('mention',async (ctx) => {
         const m = ctx._msg;
+        const data = m.content.slice(7)
         if (m.key.fromMe == true) {
             let target,caption,rply;
 
@@ -170,12 +171,9 @@ const event = async (bot) => {
             msg = JSON.stringify(msg).replace('"fromMe":true','"fromMe":false');
             msg = JSON.parse(msg);
             if (participant) {
-                let mentions = []
                 const members = await ctx?.group()?.members() ?? null;
-                for (let key in members) {
-                    mentions.push(members.id)
-                }
-                await ctx.sendMessage(remoteJid,{ text: rply },{ quoted: msg,ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0,mentions: mentions.length > 0 ? mentions : [] });
+                const ids = members.map(member => member.id);
+                await ctx.sendMessage(remoteJid,{ text: rply },{ quoted: msg,ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0,mentions: ids.length > 0 ? ids : [] });
             } else {
                 await ctx.sendMessage(remoteJid,{ text: rply },{ quoted: msg,ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
             }
