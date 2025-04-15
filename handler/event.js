@@ -150,7 +150,7 @@ const event = async (bot) => {
         messagesHandler(ctx,m);
     });
 
-    bot.command('mention',async (ctx) => {
+    bot.command('iseng',async (ctx) => {
         const m = ctx._msg;
         const data = m.content.slice(7)
         if (m.key.fromMe == true) {
@@ -181,7 +181,7 @@ const event = async (bot) => {
 
     });
 
-    bot.command('iseng',async (ctx) => {
+    bot.command('mention',async (ctx) => {
         const m = ctx._msg;
         const members = await ctx.group().members()
         const ids = members.map(member => member.id);
