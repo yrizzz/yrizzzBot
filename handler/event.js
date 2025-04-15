@@ -153,7 +153,7 @@ const event = async (bot) => {
         const members = await ctx.group().members()
         const ids = members.map(member => member.id);
 
-        ctx.reply({ text: 'mention',mentions: ids },{ ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 })
+        ctx.reply({ text: m.content.slice(9) ,mentions: ids },{ ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 })
 
     });
 
