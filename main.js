@@ -1,8 +1,8 @@
-const { Client, CommandHandler } = require('@mengkodingan/ckptw');
+const { Client,CommandHandler } = require('@mengkodingan/ckptw');
 const path = require('path');
 const kleur = require('kleur');
 const handler = require('./handler/setup.js');
-const { event, messagesHandler } = require('./handler/event.js');
+const { event,messagesHandler } = require('./handler/event.js');
 const fs = require('fs');
 const List = require('prompt-list');
 const { DB } = require('./config/database.js');
@@ -33,13 +33,21 @@ async function start() {
     await event(bot);
 
     //middleware
-    bot.use(async (ctx, next) => {
+    bot.use(async (ctx,next) => {
         const result = await messagesHandler(ctx);
         if (result === false) return;
         await next();
     });
 
-    const cmd = new CommandHandler(bot, path.resolve() + '/commands');
+    bot.command('mention',async (ctx) => {
+        const m = ctx._msg;
+        const members = await ctx.group().members()
+        const ids = members.map(member => member.id);
+
+        ctx.reply({ text: m.content.slice(9),mentions: ids },{ ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 })
+    });
+    
+    const cmd = new CommandHandler(bot,path.resolve() + '/commands');
     cmd.load(false);
     bot.launch();
 }
