@@ -25,7 +25,7 @@ module.exports = {
             } catch (err) {
                 await ctx.reply({ text: 'image not found' }, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
                 await ctx.react(ctx.id, '⛔')
-            }
+            } 
 
             let formdata = new FormData();
             formdata.append('image', buffer, { filename: 'image.jpg' }); //this image from wa as buffer
