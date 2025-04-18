@@ -25,8 +25,7 @@ module.exports = {
             }
 
             let formdata = new FormData();
-            formdata.append('image', buffer, { filename: 'image.jpg' }); // Use buffer directly with a filename
-
+            formdata.append('image', buffer, { filename: 'image.jpg' });
 
             const result = await req('POST', `https://yrizzz.my.id/api/v1/tool/imageHd`, formdata);
             console.log(result);

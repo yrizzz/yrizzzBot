@@ -89,8 +89,10 @@ const messagesHandler = async (ctx) => {
     const setupBot = await Setup.findOne();
 
     let cmd = message?.split(' ');
-    if (cmd.length > 0) {
-        cmd = cmd[0].slice(1)
+    if(cmd){
+        if (cmd.length > 0) {
+            cmd = cmd[0].slice(1)
+        }
     }
 
     print(
