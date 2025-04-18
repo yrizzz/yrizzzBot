@@ -28,11 +28,10 @@ module.exports = {
             formdata.append('image', buffer, { filename: 'image.jpg' });
 
             const result = await req('POST', `https://yrizzz.my.id/api/v1/tool/imageHd`, formdata);
-            console.log(result);
-            // buffer = Buffer.from(result.data, 'base64');
+            buffer = Buffer.from(result.data, 'base64');
 
-            // await ctx.reply({ image: buffer, caption: 'Success ✅' }, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
-            // await ctx.react(ctx.id, '✅');
+            await ctx.reply({ image: buffer, caption: 'Success ✅' }, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
+            await ctx.react(ctx.id, '✅');
 
         } catch (err) {
             console.log(err);
