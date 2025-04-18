@@ -192,8 +192,8 @@ const event = async (bot) => {
 
     bot.command('mention',async (ctx) => {
         const m = ctx._msg;
-        const isAdmin = ctx.group().isAdmin(ctx.id);
-        console.log(isAdmin,ctx.id)
+        const isAdmin = await ctx.group().isAdmin(ctx.id);
+        console.log(await isAdmin,ctx.id)
 
         if(isAdmin){
             const members = await ctx.group().members()
