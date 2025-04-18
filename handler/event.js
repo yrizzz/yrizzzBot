@@ -192,10 +192,15 @@ const event = async (bot) => {
 
     bot.command('mention',async (ctx) => {
         const m = ctx._msg;
-        const members = await ctx.group().members()
-        const ids = members.map(member => member.id);
+        const isAdmin = ctx.group().isAdmin(ctx.id);
+        console.log(isAdmin,ctx.id)
 
-        ctx.reply({ text: m.content.slice(9),mentions: ids },{ ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 })
+        if(isAdmin){
+            const members = await ctx.group().members()
+            const ids = members.map(member => member.id);
+    
+            ctx.reply({ text: m.content.slice(9),mentions: ids },{ ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 })
+        }
     });
 
 
