@@ -19,12 +19,12 @@ module.exports = {
             formdata.append('to', m.content.split(' ')[1]);
             formdata.append('q', data);
 
-            const result = await req('POST', `https://inter.youdao.com/translate`, formdata,{
+            let result = await req('POST', `https://inter.youdao.com/translate`, formdata,{
                 headers: {
                     'Content-Type': `multipart/form-data; boundary=----WebKitFormBoundaryGBO2NOB2Ox3iMBMS`,
                 }
             })
-
+            result = result.data
             let replyMsg = '';
             replyMsg += '✅ Translated successfully\n';
             replyMsg += `» Detected : *${result.translate.from}*\n`;
