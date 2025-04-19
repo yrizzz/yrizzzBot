@@ -12,6 +12,7 @@ module.exports = {
         let data = m.content.slice(command.length + 1);
         await ctx.react(ctx.id, '⏳')
         try {
+            console.log( m.content )
             data = helper.filtermessage(m, data);
 
             let formdata = new FormData();
