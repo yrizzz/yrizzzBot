@@ -1,10 +1,11 @@
 const pkg = require("@whiskeysockets/baileys");
-const { generateWAMessageFromContent } = pkg
+const { generateWAMessageFromContent,jidDecode,getDevice } = pkg
 const { Events, quote } = require('@mengkodingan/ckptw');
 const { createCanvas, loadImage } = require('canvas');
 const kleur = require('kleur');
 const moment = require('moment');
 const { DB } = require('../config/database.js');
+const { get } = require("http");
 
 
 let Setup, Owner;
@@ -82,6 +83,8 @@ const messagesHandler = async (ctx) => {
     const m = ctx._msg;
     const isGroup = ctx.isGroup();
     const sender = isGroup ? m.key.participant : m.key.remoteJid;
+
+    console.log(await jidDecode(sender),await getDevice(m.id));
     const isOwner = m.key.fromMe;
     const messageType = ctx.getMessageType();
     const message = m.content;
