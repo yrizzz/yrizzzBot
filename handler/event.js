@@ -84,8 +84,8 @@ const messagesHandler = async (ctx) => {
     const isGroup = ctx.isGroup();
     const sender = isGroup ? m.key.participant : m.key.remoteJid;
 
-    console.log(await jidDecode(sender),await getDevice(m.id));
-    
+    // console.log(await jidDecode(sender),await getDevice(m.id));
+
     const isOwner = m.key.fromMe;
     const messageType = ctx.getMessageType();
     const message = m.content;
