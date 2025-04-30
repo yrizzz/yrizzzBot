@@ -15,7 +15,7 @@
     "@google/generative-ai": "^0.17.2",
     "@mengkodingan/ckptw": "^4.4.9",
     "@types/yargs": "^17.0.33",
-    "@whiskeysockets/baileys": "github:hviana/Baileys#patch-3",
+    "@whiskeysockets/baileys": "github:Nurutomo/BaileysPatchFix#patch-1",
     "axios": "^1.7.4",
     "canvas": "^3.1.0",
     "cfonts": "^3.3.0",
