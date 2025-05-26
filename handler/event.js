@@ -1,11 +1,12 @@
 const pkg = require("@whiskeysockets/baileys");
-const { generateWAMessageFromContent,jidDecode,getDevice } = pkg
+const { generateWAMessageFromContent, jidDecode, getDevice } = pkg
 const { Events, quote } = require('@mengkodingan/ckptw');
 const { createCanvas, loadImage } = require('canvas');
 const kleur = require('kleur');
 const moment = require('moment');
 const { DB } = require('../config/database.js');
 const { get } = require("http");
+const { type } = require("os");
 
 
 let Setup, Owner;
@@ -16,9 +17,9 @@ let Setup, Owner;
     Owner = await DB.Owner();
 })();
 
-const groupUserEvent = async (bot, m) => {
+const groupUserEvent = async (bot,m) => {
     try {
-        const { id, author, participants, action } = m;
+        const { id, author, participants, action,ephemeralDuration } = m;
         const jid = participants[0];
         const groupMetadata = await bot.core.groupMetadata(id);
         const profilePictureUrl = await bot.core
@@ -27,7 +28,6 @@ const groupUserEvent = async (bot, m) => {
                 () =>
                     'https://i.pinimg.com/736x/70/dd/61/70dd612c65034b88ebf474a52ccc70c4.jpg'
             );
-        print(groupMetadata, profilePictureUrl);
         const canvas = createCanvas(300, 100);
         const ctx = canvas.getContext('2d');
         ctx.fillStyle = 'white';
@@ -66,7 +66,7 @@ const groupUserEvent = async (bot, m) => {
                 caption: capt,
                 mentions: [jid]
             },
-            { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 }
+            { ephemeralExpiration: groupMetadata.ephemeralDuration ?? 0 }
         );
     } catch (e) {
         console.error(`[${config.pkg.name}] Error:`, error);
@@ -76,18 +76,22 @@ const groupUserEvent = async (bot, m) => {
     }
 };
 
-const messagesHandler = async (ctx) => {
+const messagesHandler = async (bot, ctx) => {
 
+    const m = await ctx?._msg;
+    if(!m)return;
+    const meta = m?.key.remoteJid?.endsWith('g.us') ? await bot.core.groupMetadata(m?.key.remoteJid) : null
     const allowPublicCommand = ['mention'];
-
-    const m = ctx._msg;
-    const isGroup = ctx.isGroup();
-    const sender = isGroup ? m.key.participant : m.key.remoteJid;
+    const isGroup = await ctx?.isGroup();
+    if (isGroup && !m.key.remoteJid?.endsWith('g.us')) {
+        m.key.remoteJid = meta?.participants?.find(p => p?.id === m.key.participant)
+    }
+    const sender = isGroup ? m.key.participant : m?.key.remoteJid;
 
     // console.log(await jidDecode(sender),await getDevice(m.id));
 
     const isOwner = m.key.fromMe;
-    const messageType = ctx.getMessageType();
+    const messageType = await ctx.getMessageType();
     const message = m.content;
     const groupId = m.key.remoteJid;
     const setupBot = await Setup.findOne();
@@ -159,7 +163,7 @@ const event = async (bot) => {
     });
 
     bot.ev.on(Events.MessagesUpsert, async (m, ctx) => {
-        messagesHandler(ctx, m);
+        await messagesHandler(bot, ctx);
     });
 
     bot.command('iseng', async (ctx) => {
@@ -208,8 +212,8 @@ const event = async (bot) => {
     });
 
 
-    bot.ev.on(Events.UserJoin, async (m) => groupUserEvent(bot, m));
-    bot.ev.on(Events.UserLeave, async (m) => groupUserEvent(bot, m));
+    bot.ev.on(Events.UserJoin, async (m) => groupUserEvent(bot,m));
+    bot.ev.on(Events.UserLeave, async (m) => groupUserEvent(bot,m));
 };
 
 module.exports = { event, messagesHandler };

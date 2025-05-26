@@ -4,34 +4,25 @@ const FormData = require('form-data');
 
 module.exports = {
     name: 'translite',
-    aliases: ["tr","translite"],
+    aliases: ["tr", "translite"],
     type: 'command',
     code: async (ctx) => {
         let m = ctx._msg;
         let command = m.content.split(' ')[0];
-        let data = m.content.slice(command.length + 1);
+        let data = m.content.slice(command.length + 3);
         await ctx.react(ctx.id, '⏳')
         try {
             data = helper.filtermessage(m, data);
+            let to = m.content.split(' ')[1] || 'id'; 
 
-            let formdata = new FormData();
-            formdata.append('from', 'auto');
-            formdata.append('to', m.content.split(' ')[1]);
-            formdata.append('q', data.split(' ')[1]);
+            const result = await req('GET', `https://yrizzz.my.id/api/v1/tool/translate?from=auto&to=${to}&data=${data}`);
 
-            let result = await req('POST', `https://inter.youdao.com/translate`, formdata,{
-                headers: {
-                    'Content-Type': `multipart/form-data; boundary=----WebKitFormBoundaryGBO2NOB2Ox3iMBMS`,
-                }
-            })
-            
-            result = result.data
             let replyMsg = '';
             replyMsg += '✅ Translated successfully\n';
-            replyMsg += `» Detected : *${result.translate.from}*\n`;
-            replyMsg += `» To : *${result.translate.to}*\n\n`;
+            replyMsg += `» Detected : *${result.data.detect}*\n`;
+            replyMsg += `» To : *${to}*\n\n`;
             replyMsg += '`Result :`\n'
-            replyMsg += result.translate.tran;
+            replyMsg += result.data.translated;
 
             await ctx.reply({ text: replyMsg }, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
             await ctx.react(ctx.id, '✅')
