@@ -17,9 +17,9 @@ let Setup, Owner;
     Owner = await DB.Owner();
 })();
 
-const groupUserEvent = async (bot,m) => {
+const groupUserEvent = async (bot, m) => {
     try {
-        const { id, author, participants, action,ephemeralDuration } = m;
+        const { id, author, participants, action, ephemeralDuration } = m;
         const jid = participants[0];
         const groupMetadata = await bot.core.groupMetadata(id);
         const profilePictureUrl = await bot.core
@@ -79,16 +79,18 @@ const groupUserEvent = async (bot,m) => {
 const messagesHandler = async (bot, ctx) => {
 
     const m = await ctx?._msg;
-    if(!m)return;
+    if (!m) return;
     const meta = m?.key.remoteJid?.endsWith('g.us') ? await bot.core.groupMetadata(m?.key.remoteJid) : null
     const allowPublicCommand = ['mention'];
     const isGroup = await ctx?.isGroup();
-    if (isGroup && !m.key.remoteJid?.endsWith('g.us')) {
-        m.key.remoteJid = meta?.participants?.find(p => p?.id === m.key.participant)
+    console.log(m);
+    if (isGroup && !m.key.participant?.endsWith('lid')) {
+        const p = meta?.participants?.find(p => p?.id === m.key.participant)
+        m.key.participant = p?.phone ??  m.key.participant
+        console.log(`Group: ${meta?.id}, Participant: ${m.key.participant}`);
     }
+    
     const sender = isGroup ? m.key.participant : m?.key.remoteJid;
-
-    // console.log(await jidDecode(sender),await getDevice(m.id));
 
     const isOwner = m.key.fromMe;
     const messageType = await ctx.getMessageType();
@@ -108,7 +110,6 @@ const messagesHandler = async (bot, ctx) => {
             moment.unix(m.messageTimestamp).format('DD/MM/YYYY HH:mm:ss')
         )}]\nFrom : ${sender}\nType : ${messageType}\nMessage : ${message}\n`
     );
-
 
     if (await setupBot.selfmode === true && !isOwner && !allowPublicCommand.includes(cmd)) return false;
 
@@ -201,8 +202,6 @@ const event = async (bot) => {
     bot.command('mention', async (ctx) => {
         const m = await ctx._msg;
         const isAdmin = await ctx.group().isAdmin(m.key.participant);
-        console.log(isAdmin, m)
-
         if (isAdmin) {
             const members = await ctx.group().members()
             const ids = members.map(member => member.id);
@@ -211,9 +210,8 @@ const event = async (bot) => {
         }
     });
 
-
-    bot.ev.on(Events.UserJoin, async (m) => groupUserEvent(bot,m));
-    bot.ev.on(Events.UserLeave, async (m) => groupUserEvent(bot,m));
+    bot.ev.on(Events.UserJoin, async (m) => groupUserEvent(bot, m));
+    bot.ev.on(Events.UserLeave, async (m) => groupUserEvent(bot, m));
 };
 
 module.exports = { event, messagesHandler };

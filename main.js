@@ -1,8 +1,8 @@
-const { Client,CommandHandler } = require('@mengkodingan/ckptw');
+const { Client, CommandHandler } = require('@mengkodingan/ckptw');
 const path = require('path');
 const kleur = require('kleur');
 const handler = require('./handler/setup.js');
-const { event,messagesHandler } = require('./handler/event.js');
+const { event, messagesHandler } = require('./handler/event.js');
 const fs = require('fs');
 const List = require('prompt-list');
 const { DB } = require('./config/database.js');
@@ -15,31 +15,30 @@ async function start() {
     await DB.DropDB();
     const bot = new Client({
         readIncommingMsg: handler.base.readIncommingMsg,
+        printQRInTerminal: handler.base.printQRInTerminal,
         WAVersion: handler.base.WAVersion,
         autoMention: handler.base.autoMention,
         markOnlineOnConnect: handler.base.alwaysOnline,
-        phoneNumber: handler.bot.phoneNumber,
+        phoneNumber: handler.base.phoneNumber,
         prefix: handler.bot.prefix,
-        readIncommingMsg: handler.base.autoRead,
-        printQRInTerminal: !handler.base.usePairingCode,
         selfReply: handler.base.selfReply,
-        usePairingCode: handler.base.usePairingCode
     });
+
+
     const Setup = await DB.Setup();
     await Setup.create({
         selfmode: handler.bot.selfmode
     });
-
     await event(bot);
 
     //middleware
-    bot.use(async (ctx,next) => {
-        const result = await messagesHandler(ctx);
+    bot.use(async (ctx, next) => {
+        const result = await messagesHandler(bot,ctx);
         if (result === false) return;
         await next();
     });
-    
-    const cmd = new CommandHandler(bot,path.resolve() + '/commands');
+
+    const cmd = new CommandHandler(bot, path.resolve() + '/commands');
     cmd.load(false);
     bot.launch();
 }
