@@ -22,6 +22,7 @@ async function start() {
         phoneNumber: handler.base.phoneNumber,
         prefix: handler.bot.prefix,
         selfReply: handler.base.selfReply,
+        usePairingCode:handler.base.usePairingCode
     });
 
 

@@ -83,7 +83,6 @@ const messagesHandler = async (bot, ctx) => {
     const meta = m?.key.remoteJid?.endsWith('g.us') ? await bot.core.groupMetadata(m?.key.remoteJid) : null
     const allowPublicCommand = ['mention'];
     const isGroup = await ctx?.isGroup();
-    console.log(m);
     if (isGroup && !m.key.participant?.endsWith('lid')) {
         const p = meta?.participants?.find(p => p?.id === m.key.participant)
         m.key.participant = p?.phone ??  m.key.participant

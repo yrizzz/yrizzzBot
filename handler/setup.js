@@ -2,15 +2,15 @@ const { monospace, italic, quote } = require('@mengkodingan/ckptw');
 
 const handler = {
     bot: {
-        prefix: '/[^.#!~]/i', 
+        prefix: '/[^.#!~]/i',
         thumbnail: '',
         website: '',
         group: '',
         selfmode: true
     },
     base: {
-        readIncommingMsg: true, // Should bot mark as read the incomming messages? - Default: false
-        authDir: './config', // Path to the auth/creds directory - Default: ./state
+        readIncommingMsg: false, // Should bot mark as read the incomming messages? - Default: false
+        authDir: '', // Path to the auth/creds directory - Default: ./state
         printQRInTerminal: true, // Print the qr in terminal? - Default: false
         qrTimeout: 60000, // Time taken to generate new qr in ms - Default: 60000 ms (1 minute)
         markOnlineOnConnect: false, // Should the client mark as online on connect? - Default: true
