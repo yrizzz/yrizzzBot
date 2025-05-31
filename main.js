@@ -24,8 +24,7 @@ async function start() {
         selfReply: handler.base.selfReply,
         usePairingCode:handler.base.usePairingCode
     });
-
-
+    
     const Setup = await DB.Setup();
     await Setup.create({
         selfmode: handler.bot.selfmode
