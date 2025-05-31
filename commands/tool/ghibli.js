@@ -1,7 +1,6 @@
 const { MessageType } = require("@mengkodingan/ckptw");
 const req = require('../../handler/req.js');
 const FormData = require('form-data');
-const Blob = require('node-blob');
 
 module.exports = {
     name: 'ghibli',
