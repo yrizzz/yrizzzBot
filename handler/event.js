@@ -90,7 +90,6 @@ const messagesHandler = async (bot, ctx) => {
         let botId = bot.core.user.id.replace(/:\d+(@)/, "$1");
         isOwner = botId == m.key.participant ? true : false;
     }
-
     const sender = isGroup ? m.key.participant : m?.key.remoteJid;
     const messageType = await ctx.getMessageType();
     const message = m.content;
