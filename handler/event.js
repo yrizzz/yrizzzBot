@@ -83,15 +83,15 @@ const messagesHandler = async (bot, ctx) => {
     const meta = m?.key.remoteJid?.endsWith('g.us') ? await bot.core.groupMetadata(m?.key.remoteJid) : null
     const allowPublicCommand = ['mention'];
     const isGroup = await ctx?.isGroup();
-    if (isGroup && !m.key.participant?.endsWith('lid')) {
-        const p = meta?.participants?.find(p => p?.id === m.key.participant)
-        m.key.participant = p?.phone ??  m.key.participant
-        console.log(`Group: ${meta?.id}, Participant: ${m.key.participant}`);
+    let isOwner = m?.key.fromMe;
+    if (isGroup && m.key.participant?.endsWith('lid')) {
+        const lid = meta?.participants?.find(p => p?.id === m.key.participant)
+        m.key.participant = typeof lid?.jid !== 'undefined' ? lid.jid : m.key.participant;
+        let botId = bot.core.user.id.replace(/:\d+(@)/, "$1");
+        isOwner = botId == m.key.participant ? true : false;
     }
-    
-    const sender = isGroup ? m.key.participant : m?.key.remoteJid;
 
-    const isOwner = m.key.fromMe;
+    const sender = isGroup ? m.key.participant : m?.key.remoteJid;
     const messageType = await ctx.getMessageType();
     const message = m.content;
     const groupId = m.key.remoteJid;

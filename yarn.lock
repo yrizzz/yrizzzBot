@@ -4340,6 +4340,6 @@
   "version" "0.1.0"
 
 "zod@^3.20.2":
-  "integrity" "sha512-PcALTLskaucbeHc41tU/xfjfhcz8z0GdhhDcSgrCTmSazUuqnYqiXO63M0QUBVwpBlsLsNVn5qHSC5Dw3KZvaQ=="
-  "resolved" "https://registry.npmjs.org/zod/-/zod-3.25.42.tgz"
-  "version" "3.25.42"
+  "integrity" "sha512-IqRxcHEIjqLd4LNS/zKffB3Jzg3NwqJxQQ0Ns7pdrvgGkwQsEBdEQcOHaBVqvvZArShRzI39+aMST3FBGmTrLQ=="
+  "resolved" "https://registry.npmjs.org/zod/-/zod-3.25.46.tgz"
+  "version" "3.25.46"
