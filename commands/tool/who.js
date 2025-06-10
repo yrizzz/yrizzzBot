@@ -8,8 +8,8 @@ module.exports = {
         let data = m.content.slice(command.length + 1);
         await ctx.react(ctx.id, '⏳');
         try {
-            console.log(m);
-            let s = m?.key?.participant || m?.key?.remoteJid || '';
+            console.log(m.message);
+            let s = m?.message?.extendedTextMessage?.contextInfo.participant || data || '';
             if (typeof s === 'string' && s.length > 2) {
                 s = '0' + s.substr(2);
                 s = s.replace('@s.whatsapp.net', '');
