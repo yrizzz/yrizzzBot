@@ -10,9 +10,9 @@ module.exports = {
         try {
             let sender = m?.key?.participant ?? m?.key.remoteJid;
             sender = data ?? sender;
-            console.log(sender,data);
             const result = await req('GET', `https://yrizzz.my.id/api/v1/tool/phoneChecker?phone=${sender}`);
-            await ctx.reply({ text: result.data }, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
+            console.log(result)
+            await ctx.reply({ text: JSON.stringify(result.data) }, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
             await ctx.react(ctx.id, '✅');
 
         } catch (err) {
