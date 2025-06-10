@@ -78,12 +78,12 @@ const groupUserEvent = async (bot, m) => {
 
 const messagesHandler = async (bot, ctx) => {
 
+    const allowPublicCommand = ['mention'];
     const m = await ctx?._msg;
     if (!m) return;
-    const meta = m?.key.remoteJid?.endsWith('g.us') ? await bot.core.groupMetadata(m?.key.remoteJid) : null
-    const allowPublicCommand = ['mention'];
-    const isGroup = await ctx?.isGroup();
     let isOwner = m?.key.fromMe;
+    const meta = m?.key.remoteJid?.endsWith('g.us') ? await bot.core.groupMetadata(m?.key.remoteJid) : null
+    const isGroup = await ctx?.isGroup();
     if (isGroup && m.key.participant?.endsWith('lid')) {
         const lid = meta?.participants?.find(p => p?.id === m.key.participant)
         m.key.participant = typeof lid?.jid !== 'undefined' ? lid.jid : m.key.participant;
