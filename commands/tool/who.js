@@ -8,6 +8,7 @@ module.exports = {
         let data = m.content.slice(command.length + 1);
         await ctx.react(ctx.id, '⏳');
         try {
+            console.log(m);
             let s = m?.key?.participant || m?.key?.remoteJid || '';
             if (typeof s === 'string' && s.length > 2) {
                 s = '0' + s.substr(2);
