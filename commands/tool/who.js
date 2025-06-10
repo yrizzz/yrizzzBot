@@ -11,7 +11,7 @@ module.exports = {
             console.log(m.message);
             let s = m?.message?.extendedTextMessage?.contextInfo.participant || data || '';
             if (typeof s === 'string' && s.length > 2) {
-                s = '0' + s.substring(2);
+                s = '0' + s.substr(2);
                 s = s.replace('@s.whatsapp.net', '');
             } else {
                 s = '';
