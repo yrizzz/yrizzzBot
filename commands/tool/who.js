@@ -9,11 +9,13 @@ module.exports = {
         await ctx.react(ctx.id, '⏳');
         try {
             let s = m?.key?.participant ?? m?.key.remoteJid;
-            s = '0'+s.substr(2)
-            s = s.replace('@s.whatsapp.net','')
+            s = '0' + s.substr(2)
+            s = s.replace('@s.whatsapp.net', '')
+            console.log(s);
             let sender = data ?? s;
-            const result = await req('GET', `https://yrizzz.my.id/api/v1/tool/phoneChecker?phone=${sender}`);
-            await ctx.reply({ text: JSON.stringify(result?.data ?? result, null, 2) }, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
+            let result = await req('GET', `https://yrizzz.my.id/api/v1/tool/phoneChecker?phone=${sender}`);
+            result = JSON.stringify(result.data, null, 2);
+            await ctx.reply({ text: result }, { ephemeralExpiration: m?.message?.extendedTextMessage?.contextInfo?.expiration ?? 0 });
             await ctx.react(ctx.id, '✅');
 
         } catch (err) {
